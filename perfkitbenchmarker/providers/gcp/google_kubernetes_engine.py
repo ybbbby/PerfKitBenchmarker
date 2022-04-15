@@ -25,6 +25,7 @@ from perfkitbenchmarker import data
 from perfkitbenchmarker import errors
 from perfkitbenchmarker import kubernetes_helper
 from perfkitbenchmarker import providers
+from perfkitbenchmarker.providers.gcp import flags as gcp_flags
 from perfkitbenchmarker.providers.gcp import gce_virtual_machine
 from perfkitbenchmarker.providers.gcp import util
 import six
@@ -58,6 +59,10 @@ class GoogleContainerRegistry(container_service.BaseContainerRegistry):
   def __init__(self, registry_spec):
     super(GoogleContainerRegistry, self).__init__(registry_spec)
     self.project = self.project or util.GetDefaultProject()
+    # Update the environment for gcloud commands:
+    if gcp_flags.GKE_API_OVERRIDE.value:
+      os.environ['CLOUDSDK_API_ENDPOINT_OVERRIDES_CONTAINER'] = (
+          gcp_flags.GKE_API_OVERRIDE.value)
 
   def GetFullRegistryTag(self, image):
     """Gets the full tag of the image."""

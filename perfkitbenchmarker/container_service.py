@@ -410,7 +410,7 @@ class BaseContainerRegistry(resource.BaseResource):
     self.Login()
     if not FLAGS.force_container_build:
       # manifest inspect inpspects the registry's copy
-      return FLAGS.image[0:FLAGS.image.rindex("/")]+"k8s_nginx"
+      return FLAGS.image[0:FLAGS.image.rindex("/")]+"/k8s_nginx"
     self._Build(image)
     return full_image
 

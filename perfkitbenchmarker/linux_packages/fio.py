@@ -60,12 +60,6 @@ def GetFioExec():
 def _Install(vm):
   """Installs the fio package on the VM."""
   # TODO(user): Upgrade to python3.
-  for p in ['build_tools', 'python', 'pip3', 'python_dev']:
-    vm.Install(p)
-  for package in ('numpy', 'pandas'):
-    vm.RemoteCommand(f'sudo pip3 install {package}')
-  vm.RemoteCommand('git clone {0} {1}'.format(GIT_REPO, FIO_DIR))
-  vm.RemoteCommand('cd {0} && git checkout {1}'.format(FIO_DIR, GIT_TAG))
 
   vm.PushDataFile('fio.patch', FIO_PATCH)
   vm.RemoteCommand(f'cd {FIO_DIR} && patch -l -p1 < fio.patch')
@@ -89,7 +83,6 @@ def YumInstall(vm):
 
 def AptInstall(vm):
   """Installs the fio package on the VM."""
-  vm.InstallPackages('libaio-dev libaio1 bc zlib1g-dev')
   _Install(vm)
 
 

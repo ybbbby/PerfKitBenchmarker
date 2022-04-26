@@ -110,7 +110,7 @@ def _PrepareCluster(benchmark_spec):
     benchmark_spec.container_cluster.CreateConfigMap(
         'default-config', nginx_config_map_dirname)
   container_image = benchmark_spec.container_specs['kubernetes_nginx'].image
-  replicas = benchmark_spec.container_cluster.nodepools['nginx'].num_nodes
+  replicas = FLAGS.num_vms or benchmark_spec.container_cluster.nodepools['nginx'].num_nodes
 
   nginx_port = 80
   if FLAGS.nginx_use_ssl:
@@ -136,10 +136,7 @@ def Prepare(benchmark_spec):
         required to run the benchmark.
   """
   clients = benchmark_spec.vm_groups['clients']
-
-  prepare_fns = ([functools.partial(_PrepareCluster, benchmark_spec)] +
-                 [functools.partial(vm.Install, 'wrk2') for vm in clients])
-
+  prepare_fns = ([functools.partial(_PrepareCluster, benchmark_spec)])
   vm_util.RunThreaded(lambda f: f(), prepare_fns)
 
   benchmark_spec.nginx_endpoint_ip = (

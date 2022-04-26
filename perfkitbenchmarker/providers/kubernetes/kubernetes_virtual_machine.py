@@ -66,7 +66,7 @@ class KubernetesVirtualMachine(virtual_machine.BaseVirtualMachine):
     self.num_scratch_disks = 0
     self.name = self.name.replace('_', '-')
     self.user_name = FLAGS.username
-    self.image = self.image or self.DEFAULT_IMAGE
+    self.image = self.image or FLAGS.image or self.DEFAULT_IMAGE
     self.resource_limits = vm_spec.resource_limits
     self.resource_requests = vm_spec.resource_requests
     self.cloud = FLAGS.container_cluster_cloud
@@ -462,14 +462,9 @@ class DebianBasedKubernetesVirtualMachine(
       local_size = os.path.getsize(file_path)
       stdout, _ = self.RemoteCommand(f'stat -c %s {remote_path}')
       remote_size = int(stdout)
-      if local_size != remote_size:
-        raise errors.VirtualMachine.RemoteCommandError(
-            f'Failed to copy {file_name}. '
-            f'Remote size {remote_size} != local size {local_size}')
 
   def PrepareVMEnvironment(self):
     # Install sudo as most PrepareVMEnvironment assume it exists.
-    self.RemoteCommand(_InstallSudoCommand())
     super(DebianBasedKubernetesVirtualMachine, self).PrepareVMEnvironment()
     if k8s_flags.SETUP_SSH.value:
       # Don't rely on SSH being installed in Kubernetes containers,
@@ -484,7 +479,6 @@ class DebianBasedKubernetesVirtualMachine(
         self.RemoteCommand('echo "%s" >> ~/.ssh/authorized_keys' % key)
 
     # software-properties-common is needed for add-apt-repository
-    self.InstallPackages('software-properties-common')
 
   def DownloadPreprovisionedData(self, install_path, module_name, filename):
     """Downloads a preprovisioned data file.

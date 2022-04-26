@@ -314,21 +314,12 @@ def InstallSPECCPU(vm, speccpu_vm_state):
 
 def Install(vm):
   """Installs SPECCPU dependencies."""
-  vm.Install('wget')
-  vm.Install('fortran')
-  vm.Install('build_tools')
 
   # If runspec_build_tool_version is not set,
   # install 4.7 gcc/g++/gfortan. If either one of the flag is set, we assume
   # user is smart
-  if FLAGS.runspec_build_tool_version:
-    build_tool_version = FLAGS.runspec_build_tool_version or '4.7'
-    if not (vm.OS_TYPE == os_types.DEBIAN9 and build_tool_version == '6'):
-      # debian9 already comes with version 6
-      build_tools.Reinstall(vm, version=build_tool_version)
   if FLAGS.runspec_enable_32bit:
     vm.Install('multilib')
-  vm.Install('numactl')
 
 
 def _PrepareWithPreprovisionedTarFile(vm, speccpu_vm_state):

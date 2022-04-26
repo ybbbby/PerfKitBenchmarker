@@ -51,10 +51,7 @@ STOCKOUT_MESSAGE = ('Creation failed due to insufficient capacity indicating a '
 @functools.lru_cache()
 def GetDefaultProject():
   """Get the default project."""
-  cmd = [FLAGS.gcloud_path, 'config', 'list', '--format=json']
-  stdout, _, _ = vm_util.IssueCommand(cmd)
-  result = json.loads(stdout)
-  return result['core']['project']
+  return ""
 
 
 @functools.lru_cache()

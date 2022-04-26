@@ -87,5 +87,4 @@ def Install(vm):
 
 
 def AptInstall(vm):
-  vm.InstallPackages('libjemalloc-dev libomp-dev')
   Install(vm)

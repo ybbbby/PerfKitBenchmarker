@@ -72,7 +72,6 @@ class GoogleContainerRegistry(container_service.BaseContainerRegistry):
     # TODO(pclay): Don't edit user's docker config. It is idempotent.
     cmd = util.GcloudCommand(self, 'auth', 'configure-docker')
     del cmd.flags['zone']
-    cmd.Issue()
 
   def RemoteBuild(self, image):
     """Build the image remotely."""

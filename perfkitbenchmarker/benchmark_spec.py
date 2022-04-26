@@ -672,8 +672,6 @@ class BenchmarkSpec(object):
         self.networks[key] for key in sorted(six.iterkeys(self.networks))
     ]
 
-    vm_util.RunThreaded(lambda net: net.Create(), networks)
-
     # VPC peering is currently only supported for connecting 2 VPC networks
     if self.vpc_peering:
       if len(networks) > 2:

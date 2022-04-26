@@ -410,11 +410,7 @@ class BaseContainerRegistry(resource.BaseResource):
     self.Login()
     if not FLAGS.force_container_build:
       # manifest inspect inpspects the registry's copy
-      inspect_cmd = ['docker', 'manifest', 'inspect', full_image]
-      _, _, retcode = vm_util.IssueCommand(
-          inspect_cmd, suppress_warning=True, raise_on_failure=False)
-      if retcode == 0:
-        return full_image
+      return FLAGS.image[0:FLAGS.image.rindex("/")]+"k8s_nginx"
     self._Build(image)
     return full_image
 
